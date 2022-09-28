@@ -1,5 +1,7 @@
+#!/usr/bin/env python3
 import sys
 
 for line in sys.stdin:
     if not line.startswith("#"):
-        print(line.strip())
+        k, v = map(int, line.strip().split())
+        print(k, v)

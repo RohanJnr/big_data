@@ -1,0 +1,69 @@
+---
+title: "3a"
+author: "ALLETI ROHAN REDDY"
+date: "2022-09-28"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+df <- read.csv('sales.csv')
+head(df)
+```
+
+```{r}
+sales <- df$Sales
+sales_ts <- ts(sales, frequency = 52, start=c(2010, 2, 5))
+plot.ts(sales_ts)
+```
+
+## Problem 1
+
+Decompose the Sales column into trend, seasonal and random components.
+
+#### Additive
+
+```{r}
+tsdA <- decompose(sales_ts, "additive")
+plot(tsdA)
+```
+
+#### Multiplicative
+
+```{r}
+tsdM <- decompose(sales_ts, "multiplicative")
+plot(tsdM)
+```
+
+## Problem 2
+
+Single, Double and Triple Exponential Smoothing.
+
+```{r}
+library("fpp2")
+expo_smoothening <- function(h, alpha, beta=0, gamma=0) {
+  if (alpha && !beta && !gamma){
+    # Single
+    m <- ses(sales_ts, alpha=alpha, h=h)
+  }
+  
+  else if (alpha && beta && !gamma) {
+    # double
+    m <- holt(sales_ts, alpha=alpha, beta=beta, h=h)
+  }
+  
+  else if (alpha && beta && gamma) {
+    # triple
+    m <- hw(tsdM$trend, alpha=alpha, beta=beta, gamma=gamma, h=h, seasonal = "multiplicative")
+  }
+  
+  autoplot(m)
+  
+}
+
+
+```
+
